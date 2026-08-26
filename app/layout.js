@@ -1,5 +1,6 @@
 import "./globals.css";
 import RegisterSW from "./RegisterSW";
+import NavBar from "@/components/NavBar";
 
 export const metadata = {
   title: "Controle de Aluguel de Motos",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-[#0f1115] text-[#eef0f4]">
+        <NavBar />
         {children}
         <RegisterSW />
       </body>
