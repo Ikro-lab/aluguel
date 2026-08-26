@@ -33,12 +33,12 @@ export default function TiposManager({ tipos, onAdd, onUpdate, onDelete }) {
   }
 
   return (
-    <div className="bg-[#171a21] border border-[#2a2f3a] rounded-2xl p-5">
-      <h2 className="text-xs uppercase tracking-wide text-[#9aa3b2] font-semibold mb-1">
+    <div className="bg-[#0f1729] border border-[#22304d] rounded-2xl p-5">
+      <h2 className="text-xs uppercase tracking-wide text-[#8996b3] font-semibold mb-1">
         Tipos de aluguel
         <button
           onClick={() => setOpen((o) => !o)}
-          className="float-right normal-case tracking-normal text-[#ffb057] font-semibold w-auto"
+          className="float-right normal-case tracking-normal text-[#60a5fa] font-semibold w-auto"
           style={{ background: 'none', padding: 0, margin: 0 }}
         >
           {open ? 'fechar ▴' : 'gerenciar ▾'}
@@ -52,12 +52,12 @@ export default function TiposManager({ tipos, onAdd, onUpdate, onDelete }) {
             return (
               <div
                 key={t.id}
-                className="grid grid-cols-[1fr_100px_auto_auto] gap-2 items-center py-2 border-b border-[#2a2f3a] last:border-0"
+                className="grid grid-cols-[1fr_100px_auto_auto] gap-2 items-center py-2 border-b border-[#22304d] last:border-0"
               >
                 <input
                   value={e.nome}
                   onChange={(ev) => setEdit(t.id, 'nome', ev.target.value)}
-                  className="bg-[#1e222b] border border-[#2a2f3a] rounded-md px-2.5 py-2 text-sm"
+                  className="bg-[#16213a] border border-[#22304d] rounded-md px-2.5 py-2 text-sm"
                 />
                 <input
                   type="number"
@@ -65,12 +65,12 @@ export default function TiposManager({ tipos, onAdd, onUpdate, onDelete }) {
                   min="0"
                   value={e.valor_base}
                   onChange={(ev) => setEdit(t.id, 'valor_base', ev.target.value)}
-                  className="bg-[#1e222b] border border-[#2a2f3a] rounded-md px-2.5 py-2 text-sm"
+                  className="bg-[#16213a] border border-[#22304d] rounded-md px-2.5 py-2 text-sm"
                 />
                 <button
                   onClick={() => handleSave(t)}
                   title="Salvar"
-                  className="w-9 h-9 rounded-lg border border-[#2a2f3a] bg-transparent text-[#9aa3b2] hover:text-[#eef0f4] hover:border-[#ff7a1a] p-0"
+                  className="w-9 h-9 rounded-lg border border-[#22304d] bg-transparent text-[#8996b3] hover:text-[#e7ecf7] hover:border-[#3b82f6] p-0"
                 >
                   💾
                 </button>
@@ -78,7 +78,7 @@ export default function TiposManager({ tipos, onAdd, onUpdate, onDelete }) {
                   onClick={() => onDelete(t.id)}
                   title="Excluir"
                   disabled={tipos.length <= 1}
-                  className="w-9 h-9 rounded-lg border border-[#2a2f3a] bg-transparent text-[#9aa3b2] hover:text-[#ff5c5c] hover:border-[#ff5c5c] p-0 disabled:opacity-40"
+                  className="w-9 h-9 rounded-lg border border-[#22304d] bg-transparent text-[#8996b3] hover:text-[#f87171] hover:border-[#f87171] p-0 disabled:opacity-40"
                 >
                   ✕
                 </button>
@@ -91,7 +91,7 @@ export default function TiposManager({ tipos, onAdd, onUpdate, onDelete }) {
               value={novoNome}
               onChange={(e) => setNovoNome(e.target.value)}
               placeholder="Nome (ex: 2 horas)"
-              className="bg-[#1e222b] border border-[#2a2f3a] rounded-md px-2.5 py-2.5 text-sm"
+              className="bg-[#16213a] border border-[#22304d] rounded-md px-2.5 py-2.5 text-sm"
             />
             <input
               type="number"
@@ -100,11 +100,11 @@ export default function TiposManager({ tipos, onAdd, onUpdate, onDelete }) {
               value={novoValor}
               onChange={(e) => setNovoValor(e.target.value)}
               placeholder="Valor base"
-              className="bg-[#1e222b] border border-[#2a2f3a] rounded-md px-2.5 py-2.5 text-sm"
+              className="bg-[#16213a] border border-[#22304d] rounded-md px-2.5 py-2.5 text-sm"
             />
             <button
               onClick={handleAdd}
-              className="w-auto bg-[#ff7a1a] hover:bg-[#ffb057] text-[#101114] font-bold rounded-md px-4 py-2.5 text-sm mt-0"
+              className="w-auto bg-[#3b82f6] hover:bg-[#60a5fa] text-[#f8fafc] font-bold rounded-md px-4 py-2.5 text-sm mt-0"
             >
               Adicionar
             </button>

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f1115;
-  --foreground: #eef0f4;
+  --background: #070d1a;
+  --foreground: #e7ecf7;
 }
 
 body {
@@ -13,4 +13,10 @@ body {
 
 input:focus, select:focus {
   outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+* {
+  scrollbar-color: #22304d #0f1729;
 }

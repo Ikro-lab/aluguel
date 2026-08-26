@@ -39,18 +39,18 @@ export default function NovoAluguelForm({ tipos, vendedoresConhecidos, onSubmit 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#171a21] border border-[#2a2f3a] rounded-2xl p-5 space-y-4">
-      <h2 className="text-xs uppercase tracking-wide text-[#9aa3b2] font-semibold">Novo aluguel</h2>
+    <form onSubmit={handleSubmit} className="bg-[#0f1729] border border-[#22304d] rounded-2xl p-5 space-y-4">
+      <h2 className="text-xs uppercase tracking-wide text-[#8996b3] font-semibold">Novo aluguel</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs text-[#9aa3b2] mb-1.5 font-medium">Nome do vendedor</label>
+          <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Nome do vendedor</label>
           <input
             list="vendedores-list"
             value={vendedor}
             onChange={(e) => setVendedor(e.target.value)}
             placeholder="Ex: João"
-            className="w-full bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-2.5 text-[15px]"
+            className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
           />
           <datalist id="vendedores-list">
             {vendedoresConhecidos.map((v) => (
@@ -60,11 +60,11 @@ export default function NovoAluguelForm({ tipos, vendedoresConhecidos, onSubmit 
         </div>
 
         <div>
-          <label className="block text-xs text-[#9aa3b2] mb-1.5 font-medium">Tipo de aluguel</label>
+          <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Tipo de aluguel</label>
           <select
             value={tipoId || tipos[0]?.id}
             onChange={(e) => setTipoId(e.target.value)}
-            className="w-full bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-2.5 text-[15px]"
+            className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
           >
             {tipos.map((t) => (
               <option key={t.id} value={t.id}>
@@ -77,7 +77,7 @@ export default function NovoAluguelForm({ tipos, vendedoresConhecidos, onSubmit 
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs text-[#9aa3b2] mb-1.5 font-medium">Valor cobrado do cliente (R$)</label>
+          <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Valor cobrado do cliente (R$)</label>
           <input
             type="number"
             step="0.01"
@@ -85,19 +85,19 @@ export default function NovoAluguelForm({ tipos, vendedoresConhecidos, onSubmit 
             value={valorCobrado}
             onChange={(e) => setValorCobrado(e.target.value)}
             placeholder="0,00"
-            className="w-full bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-2.5 text-[15px]"
+            className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
           />
-          <div className="text-xs text-[#9aa3b2] mt-1.5">
-            Valor base: <b className="text-[#ffb057]">{fmtMoney(base)}</b>
+          <div className="text-xs text-[#8996b3] mt-1.5">
+            Valor base: <b className="text-[#60a5fa]">{fmtMoney(base)}</b>
           </div>
         </div>
 
         <div>
-          <label className="block text-xs text-[#9aa3b2] mb-1.5 font-medium">Forma de pagamento</label>
+          <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Forma de pagamento</label>
           <select
             value={formaPagamento}
             onChange={(e) => setFormaPagamento(e.target.value)}
-            className="w-full bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-2.5 text-[15px]"
+            className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
           >
             {FORMAS_PAGAMENTO.map((f) => (
               <option key={f} value={f}>{f}</option>
@@ -106,12 +106,12 @@ export default function NovoAluguelForm({ tipos, vendedoresConhecidos, onSubmit 
         </div>
       </div>
 
-      <div className="flex justify-between items-center bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-4 py-3.5">
-        <span className="text-sm text-[#9aa3b2]">Comissão do vendedor</span>
+      <div className="flex justify-between items-center bg-[#16213a] border border-[#22304d] rounded-lg px-4 py-3.5">
+        <span className="text-sm text-[#8996b3]">Comissão do vendedor</span>
         <span
           className={
             'text-xl font-bold ' +
-            (comissao > 0 ? 'text-[#3ddc84]' : comissao < 0 ? 'text-[#ff5c5c]' : 'text-[#9aa3b2]')
+            (comissao > 0 ? 'text-[#34d399]' : comissao < 0 ? 'text-[#f87171]' : 'text-[#8996b3]')
           }
         >
           {fmtMoney(comissao)}
@@ -121,7 +121,7 @@ export default function NovoAluguelForm({ tipos, vendedoresConhecidos, onSubmit 
       <button
         type="submit"
         disabled={saving || tipos.length === 0}
-        className="w-full bg-[#ff7a1a] hover:bg-[#ffb057] text-[#101114] font-bold rounded-lg py-3 disabled:opacity-50"
+        className="w-full bg-[#3b82f6] hover:bg-[#60a5fa] text-[#f8fafc] font-bold rounded-lg py-3 disabled:opacity-50"
       >
         {saving ? 'Salvando…' : 'Registrar aluguel'}
       </button>

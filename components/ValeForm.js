@@ -41,32 +41,32 @@ export default function ValeForm({ funcionarios, saldoPorFuncionario, onSubmit }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#171a21] border border-[#2a2f3a] rounded-2xl p-5 space-y-4">
-      <h2 className="text-xs uppercase tracking-wide text-[#9aa3b2] font-semibold">Vale / Adiantamento</h2>
+    <form onSubmit={handleSubmit} className="bg-[#0f1729] border border-[#22304d] rounded-2xl p-5 space-y-4">
+      <h2 className="text-xs uppercase tracking-wide text-[#8996b3] font-semibold">Vale / Adiantamento</h2>
 
       {funcionarios.length === 0 ? (
-        <div className="text-center text-[#9aa3b2] text-sm py-6">Cadastre um funcionário antes de registrar um vale</div>
+        <div className="text-center text-[#8996b3] text-sm py-6">Cadastre um funcionário antes de registrar um vale</div>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs text-[#9aa3b2] mb-1.5 font-medium">Funcionário</label>
+              <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Funcionário</label>
               <select
                 value={idSelecionado}
                 onChange={(e) => setFuncionarioId(e.target.value)}
-                className="w-full bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-2.5 text-[15px]"
+                className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
               >
                 {funcionarios.map((f) => (
                   <option key={f.id} value={f.id}>{f.nome}</option>
                 ))}
               </select>
-              <div className="text-xs text-[#9aa3b2] mt-1.5">
-                Saldo disponível: <b className={saldoDisponivel < 0 ? 'text-[#ff5c5c]' : 'text-[#3ddc84]'}>{fmtMoney(saldoDisponivel)}</b>
+              <div className="text-xs text-[#8996b3] mt-1.5">
+                Saldo disponível: <b className={saldoDisponivel < 0 ? 'text-[#f87171]' : 'text-[#34d399]'}>{fmtMoney(saldoDisponivel)}</b>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs text-[#9aa3b2] mb-1.5 font-medium">Valor (R$)</label>
+              <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Valor (R$)</label>
               <input
                 type="number"
                 step="0.01"
@@ -74,23 +74,23 @@ export default function ValeForm({ funcionarios, saldoPorFuncionario, onSubmit }
                 value={valor}
                 onChange={(e) => setValor(e.target.value)}
                 placeholder="0,00"
-                className="w-full bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-2.5 text-[15px]"
+                className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs text-[#9aa3b2] mb-1.5 font-medium">Descrição (opcional)</label>
+            <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Descrição (opcional)</label>
             <input
               value={descricao}
               onChange={(e) => setDescricao(e.target.value)}
               placeholder="Ex: Adiantamento quinzenal"
-              className="w-full bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-2.5 text-[15px]"
+              className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
             />
           </div>
 
           {(erro || excedeSaldo) && (
-            <div className="text-[#ff9a9a] text-xs bg-[#2a1616] border border-[#ff5c5c]/40 rounded-lg px-3 py-2">
+            <div className="text-[#fca5a5] text-xs bg-[#241826] border border-[#f87171]/40 rounded-lg px-3 py-2">
               {erro || 'Valor maior que o saldo disponível do funcionário'}
             </div>
           )}
@@ -98,7 +98,7 @@ export default function ValeForm({ funcionarios, saldoPorFuncionario, onSubmit }
           <button
             type="submit"
             disabled={saving || excedeSaldo}
-            className="w-full bg-[#ff7a1a] hover:bg-[#ffb057] text-[#101114] font-bold rounded-lg py-3 disabled:opacity-50"
+            className="w-full bg-[#3b82f6] hover:bg-[#60a5fa] text-[#f8fafc] font-bold rounded-lg py-3 disabled:opacity-50"
           >
             {saving ? 'Salvando…' : 'Registrar vale'}
           </button>

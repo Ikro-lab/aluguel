@@ -34,16 +34,16 @@ export default function DespesaForm({ onSubmit }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#171a21] border border-[#2a2f3a] rounded-2xl p-5 space-y-4">
-      <h2 className="text-xs uppercase tracking-wide text-[#9aa3b2] font-semibold">Nova despesa</h2>
+    <form onSubmit={handleSubmit} className="bg-[#0f1729] border border-[#22304d] rounded-2xl p-5 space-y-4">
+      <h2 className="text-xs uppercase tracking-wide text-[#8996b3] font-semibold">Nova despesa</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs text-[#9aa3b2] mb-1.5 font-medium">Categoria</label>
+          <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Categoria</label>
           <select
             value={categoria}
             onChange={(e) => setCategoria(e.target.value)}
-            className="w-full bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-2.5 text-[15px]"
+            className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
           >
             {CATEGORIAS_DESPESA.map((c) => (
               <option key={c} value={c}>{c}</option>
@@ -54,25 +54,25 @@ export default function DespesaForm({ onSubmit }) {
               value={categoriaOutra}
               onChange={(e) => setCategoriaOutra(e.target.value)}
               placeholder="Descreva a categoria"
-              className="w-full mt-2 bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-2.5 text-[15px]"
+              className="w-full mt-2 bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
             />
           )}
         </div>
 
         <div>
-          <label className="block text-xs text-[#9aa3b2] mb-1.5 font-medium">Data</label>
+          <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Data</label>
           <input
             type="date"
             value={data}
             onChange={(e) => setData(e.target.value)}
-            className="w-full bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-2.5 text-[15px]"
+            className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs text-[#9aa3b2] mb-1.5 font-medium">Valor (R$)</label>
+          <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Valor (R$)</label>
           <input
             type="number"
             step="0.01"
@@ -80,16 +80,16 @@ export default function DespesaForm({ onSubmit }) {
             value={valor}
             onChange={(e) => setValor(e.target.value)}
             placeholder="0,00"
-            className="w-full bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-2.5 text-[15px]"
+            className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
           />
         </div>
         <div>
-          <label className="block text-xs text-[#9aa3b2] mb-1.5 font-medium">Descrição (opcional)</label>
+          <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Descrição (opcional)</label>
           <input
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
             placeholder="Ex: Troca de óleo da moto 3"
-            className="w-full bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-2.5 text-[15px]"
+            className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
           />
         </div>
       </div>
@@ -97,7 +97,7 @@ export default function DespesaForm({ onSubmit }) {
       <button
         type="submit"
         disabled={saving}
-        className="w-full bg-[#ff7a1a] hover:bg-[#ffb057] text-[#101114] font-bold rounded-lg py-3 disabled:opacity-50"
+        className="w-full bg-[#3b82f6] hover:bg-[#60a5fa] text-[#f8fafc] font-bold rounded-lg py-3 disabled:opacity-50"
       >
         {saving ? 'Salvando…' : 'Registrar despesa'}
       </button>

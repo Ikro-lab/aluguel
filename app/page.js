@@ -120,13 +120,13 @@ export default function Home() {
     <main className="max-w-3xl mx-auto px-4 py-6 pb-16 space-y-5 w-full">
       <div>
         <h1 className="text-xl font-bold tracking-tight">🏍️ Controle de Aluguel de Motos</h1>
-        <p className="text-[13px] text-[#9aa3b2] mt-1">
+        <p className="text-[13px] text-[#8996b3] mt-1">
           Cadastre seus tipos de aluguel e valores base — o excedente cobrado é a comissão do vendedor
         </p>
       </div>
 
       {erro && (
-        <div className="bg-[#2a1616] border border-[#ff5c5c]/40 text-[#ff9a9a] rounded-xl p-4 text-sm">
+        <div className="bg-[#241826] border border-[#f87171]/40 text-[#fca5a5] rounded-xl p-4 text-sm">
           {erro === 'configuração ausente' ? (
             <>Supabase ainda não configurado.</>
           ) : (
@@ -140,7 +140,7 @@ export default function Home() {
       )}
 
       {loading ? (
-        <div className="text-center text-[#9aa3b2] text-sm py-10">Carregando…</div>
+        <div className="text-center text-[#8996b3] text-sm py-10">Carregando…</div>
       ) : (
         <>
           <NovoAluguelForm tipos={tipos} vendedoresConhecidos={vendedoresConhecidos} onSubmit={handleAddAluguel} />
@@ -152,7 +152,7 @@ export default function Home() {
       )}
 
       {toast && (
-        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 bg-[#3ddc84] text-[#08130c] px-4 py-2.5 rounded-lg text-[13px] font-bold shadow-lg">
+        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 bg-[#34d399] text-[#08130c] px-4 py-2.5 rounded-lg text-[13px] font-bold shadow-lg">
           {toast}
         </div>
       )}

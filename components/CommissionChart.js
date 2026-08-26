@@ -29,13 +29,13 @@ export default function CommissionChart({ alugueis, funcionarios }) {
   }, [alugueisFiltrados]);
 
   return (
-    <div className="bg-[#171a21] border border-[#2a2f3a] rounded-2xl p-5">
+    <div className="bg-[#0f1729] border border-[#22304d] rounded-2xl p-5">
       <div className="flex items-center justify-between gap-2 mb-4 flex-wrap">
-        <h2 className="text-xs uppercase tracking-wide text-[#9aa3b2] font-semibold">Comissões mensais</h2>
+        <h2 className="text-xs uppercase tracking-wide text-[#8996b3] font-semibold">Comissões mensais</h2>
         <select
           value={selecionado}
           onChange={(e) => setSelecionado(e.target.value)}
-          className="w-auto min-w-[160px] bg-[#1e222b] border border-[#2a2f3a] rounded-lg px-3 py-1.5 text-sm"
+          className="w-auto min-w-[160px] bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-1.5 text-sm"
         >
           <option value={TODO_TIME}>Todo o time</option>
           {funcionarios.map((f) => (
@@ -44,21 +44,21 @@ export default function CommissionChart({ alugueis, funcionarios }) {
         </select>
       </div>
       {dados.length === 0 ? (
-        <div className="text-center text-[#9aa3b2] text-sm py-10">Sem dados ainda</div>
+        <div className="text-center text-[#8996b3] text-sm py-10">Sem dados ainda</div>
       ) : (
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={dados} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2a2f3a" vertical={false} />
-              <XAxis dataKey="label" stroke="#9aa3b2" fontSize={12} tickLine={false} axisLine={{ stroke: '#2a2f3a' }} />
-              <YAxis stroke="#9aa3b2" fontSize={12} tickLine={false} axisLine={false} width={48} tickFormatter={(v) => fmtMoney(v)} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#22304d" vertical={false} />
+              <XAxis dataKey="label" stroke="#8996b3" fontSize={12} tickLine={false} axisLine={{ stroke: '#22304d' }} />
+              <YAxis stroke="#8996b3" fontSize={12} tickLine={false} axisLine={false} width={48} tickFormatter={(v) => fmtMoney(v)} />
               <Tooltip
-                cursor={{ fill: '#2a2f3a55' }}
-                contentStyle={{ background: '#1e222b', border: '1px solid #2a2f3a', borderRadius: 8, fontSize: 13 }}
-                labelStyle={{ color: '#9aa3b2' }}
+                cursor={{ fill: '#22304d55' }}
+                contentStyle={{ background: '#16213a', border: '1px solid #22304d', borderRadius: 8, fontSize: 13 }}
+                labelStyle={{ color: '#8996b3' }}
                 formatter={(v) => [fmtMoney(v), 'Comissão']}
               />
-              <Bar dataKey="comissao" fill="#3ddc84" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="comissao" fill="#34d399" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

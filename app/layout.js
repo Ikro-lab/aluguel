@@ -18,7 +18,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#ff7a1a",
+  themeColor: "#3b82f6",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -27,7 +27,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-[#0f1115] text-[#eef0f4]">
+      <body className="min-h-full flex flex-col bg-[#070d1a] text-[#e7ecf7]">
         <NavBar />
         {children}
         <RegisterSW />

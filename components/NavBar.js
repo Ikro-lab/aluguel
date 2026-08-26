@@ -14,7 +14,7 @@ export default function NavBar() {
   const pathname = usePathname();
 
   return (
-    <nav className="sticky top-0 z-10 bg-[#0f1115]/95 backdrop-blur border-b border-[#2a2f3a]">
+    <nav className="sticky top-0 z-10 bg-[#070d1a]/95 backdrop-blur border-b border-[#22304d]">
       <div className="max-w-3xl mx-auto px-4 flex gap-1 overflow-x-auto">
         {LINKS.map((l) => {
           const active = pathname === l.href;
@@ -25,8 +25,8 @@ export default function NavBar() {
               className={
                 'whitespace-nowrap px-3.5 py-3 text-sm font-semibold border-b-2 transition-colors ' +
                 (active
-                  ? 'border-[#ff7a1a] text-[#ffb057]'
-                  : 'border-transparent text-[#9aa3b2] hover:text-[#eef0f4]')
+                  ? 'border-[#3b82f6] text-[#60a5fa]'
+                  : 'border-transparent text-[#8996b3] hover:text-[#e7ecf7]')
               }
             >
               {l.label}
