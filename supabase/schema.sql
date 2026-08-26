@@ -104,6 +104,17 @@ create table if not exists ordens_servico (
 alter table alugueis add column if not exists cliente_id uuid references clientes(id) on delete set null;
 alter table alugueis add column if not exists bike_id uuid references bikes(id) on delete set null;
 
+-- Ordem de serviço: pode ser de uma bike da frota OU de uma bike de cliente
+-- (nesse caso é um serviço pago, com custo separado de peça/mecânico e um
+-- valor cobrado do cliente).
+alter table ordens_servico add column if not exists origem text not null default 'frota';
+alter table ordens_servico add column if not exists cliente_id uuid references clientes(id) on delete set null;
+alter table ordens_servico add column if not exists bike_descricao text;
+alter table ordens_servico add column if not exists custo_peca numeric(10,2) not null default 0;
+alter table ordens_servico add column if not exists custo_mecanico numeric(10,2) not null default 0;
+alter table ordens_servico add column if not exists valor_cobrado numeric(10,2);
+alter table ordens_servico add column if not exists forma_pagamento text;
+
 -- Agendamento público (link + QR code): status também usa
 -- 'aguardando_confirmacao' e 'recusado' além dos valores internos.
 alter table agendamentos add column if not exists codigo_agendamento text;

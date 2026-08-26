@@ -12,14 +12,15 @@ export default function ManutencaoPage() {
     ascending: false,
   });
   const { data: bikes, loading: loadingBikes, erro: erroBikes } = useRealtimeTable('bikes', { orderBy: 'modelo', ascending: true });
+  const { data: clientes, loading: loadingClientes, erro: erroClientes } = useRealtimeTable('clientes', { orderBy: 'nome', ascending: true });
   const { data: funcionarios, loading: loadingFuncionarios, erro: erroFuncionarios } = useRealtimeTable('funcionarios', {
     orderBy: 'nome',
     ascending: true,
   });
   const [toast, setToast] = useState('');
 
-  const loading = loadingOS || loadingBikes || loadingFuncionarios;
-  const erro = erroOS || erroBikes || erroFuncionarios;
+  const loading = loadingOS || loadingBikes || loadingClientes || loadingFuncionarios;
+  const erro = erroOS || erroBikes || erroClientes || erroFuncionarios;
 
   const showToast = useCallback((msg) => {
     setToast(msg);
@@ -32,7 +33,9 @@ export default function ManutencaoPage() {
       showToast('Erro ao abrir OS: ' + error.message);
       return;
     }
-    await supabase.from('bikes').update({ status: 'manutencao' }).eq('id', os.bike_id);
+    if (os.origem === 'frota' && os.bike_id) {
+      await supabase.from('bikes').update({ status: 'manutencao' }).eq('id', os.bike_id);
+    }
     showToast('Ordem de serviço aberta');
     reload();
   }
@@ -46,10 +49,37 @@ export default function ManutencaoPage() {
       showToast('Erro ao atualizar: ' + error.message);
       return;
     }
-    if (novoStatus === 'concluida' && data?.bike_id) {
-      await supabase.from('bikes').update({ status: 'disponivel' }).eq('id', data.bike_id);
+
+    if (novoStatus === 'concluida') {
+      const custoTotal = Number(data.custo_peca || 0) + Number(data.custo_mecanico || 0);
+      const hoje = new Date().toISOString().slice(0, 10);
+
+      await supabase.from('despesas').insert({
+        categoria: 'Manutenção',
+        descricao: `OS: ${data.problema}`,
+        valor: custoTotal,
+        data: hoje,
+      });
+
+      if (data.origem === 'cliente') {
+        await supabase.from('alugueis').insert({
+          vendedor: data.mecanico || 'Manutenção',
+          tipo_id: null,
+          tipo_nome: 'Serviço de manutenção',
+          valor_base: data.valor_cobrado || 0,
+          valor_cobrado: data.valor_cobrado || 0,
+          comissao: 0,
+          forma_pagamento: data.forma_pagamento || 'Outro',
+          cliente_id: data.cliente_id,
+        });
+      } else if (data.bike_id) {
+        await supabase.from('bikes').update({ status: 'disponivel' }).eq('id', data.bike_id);
+      }
+
+      showToast('OS concluída — despesa registrada' + (data.origem === 'cliente' ? ' e faturamento lançado' : ''));
+    } else {
+      showToast('Ordem de serviço atualizada');
     }
-    showToast('Ordem de serviço atualizada');
     reload();
   }
 
@@ -67,7 +97,7 @@ export default function ManutencaoPage() {
     <main className="max-w-3xl mx-auto px-4 py-6 pb-16 space-y-5 w-full">
       <div>
         <h1 className="text-xl font-bold tracking-tight">🔧 Manutenção</h1>
-        <p className="text-[13px] text-[#8996b3] mt-1">Ordens de serviço e histórico por bike</p>
+        <p className="text-[13px] text-[#8996b3] mt-1">Ordens de serviço de bikes da frota ou de clientes</p>
       </div>
 
       {erro && (
@@ -80,8 +110,8 @@ export default function ManutencaoPage() {
         <div className="text-center text-[#8996b3] text-sm py-10">Carregando…</div>
       ) : (
         <>
-          <OrdemServicoForm bikes={bikes} funcionarios={funcionarios} onSubmit={handleAdd} />
-          <OrdensServicoList ordensServico={ordensServico} bikes={bikes} onAvancar={handleAvancar} onDelete={handleDelete} />
+          <OrdemServicoForm bikes={bikes} clientes={clientes} funcionarios={funcionarios} onSubmit={handleAdd} />
+          <OrdensServicoList ordensServico={ordensServico} bikes={bikes} clientes={clientes} onAvancar={handleAvancar} onDelete={handleDelete} />
         </>
       )}
 
