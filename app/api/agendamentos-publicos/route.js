@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient';
+import { linkWhatsApp } from '@/lib/format';
 
 const CHARSET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
@@ -77,6 +78,10 @@ export async function POST(request) {
             .filter(Boolean)
             .join(', ')
         : null;
+      const modoTexto = tipo === 'entrega' ? 'entrega no endereço informado' : 'retirada na loja';
+      const dataFormatada = new Date(`${data}T00:00:00`).toLocaleDateString('pt-BR');
+      const mensagemWhats = `Olá ${nome}! ✅ Confirmamos sua reserva da bike elétrica para ${dataFormatada} às ${hora} (${tempo_uso}), ${modoTexto}. Qualquer dúvida, é só chamar por aqui!`;
+      const whatsappUrl = linkWhatsApp(telefone, mensagemWhats);
 
       await resend.emails.send({
         from: 'ERP Bikes Elétricas <onboarding@resend.dev>',
@@ -90,6 +95,11 @@ export async function POST(request) {
           ${enderecoTexto ? `<p><b>Endereço:</b> ${enderecoTexto}${endereco?.observacao ? ` (${endereco.observacao})` : ''}</p>` : ''}
           ${observacoes ? `<p><b>Observações:</b> ${observacoes}</p>` : ''}
           <p><b>Código do agendamento:</b> ${codigo_agendamento}</p>
+          <p>
+            <a href="${whatsappUrl}" style="display:inline-block;background:#25D366;color:#ffffff;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:bold;">
+              Confirmar via WhatsApp
+            </a>
+          </p>
           <p><a href="${origin}/agenda">Abrir agenda no ERP para confirmar</a></p>
         `,
       });
