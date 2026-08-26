@@ -2,13 +2,13 @@ import "./globals.css";
 import RegisterSW from "./RegisterSW";
 
 export const metadata = {
-  title: "ERP Bikes Elétricas",
+  title: "Freitas Bikes",
   description: "Aluguel, frota, agendamentos e manutenção de bikes elétricas",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Bikes Elét.",
+    title: "Freitas Bikes",
   },
   icons: {
     icon: "/icons/icon-192.png",

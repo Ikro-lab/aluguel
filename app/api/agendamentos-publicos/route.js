@@ -84,7 +84,7 @@ export async function POST(request) {
       const whatsappUrl = linkWhatsApp(telefone, mensagemWhats);
 
       await resend.emails.send({
-        from: 'ERP Bikes Elétricas <onboarding@resend.dev>',
+        from: 'Freitas Bikes <onboarding@resend.dev>',
         to: process.env.LOJISTA_EMAIL,
         subject: `Novo agendamento: ${nome} — ${data} às ${hora}`,
         html: `

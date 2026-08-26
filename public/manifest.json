@@ -1,6 +1,6 @@
 {
-  "name": "ERP Bikes Elétricas",
-  "short_name": "Bikes Elét.",
+  "name": "Freitas Bikes",
+  "short_name": "Freitas Bikes",
   "description": "Aluguel, frota, agendamentos e manutenção de bikes elétricas",
   "start_url": "/",
   "display": "standalone",

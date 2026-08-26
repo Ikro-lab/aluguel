@@ -1,4 +1,4 @@
-# ERP Bikes Elétricas
+# Freitas Bikes
 
 App Next.js + Supabase para gerenciar um negócio de aluguel de bikes/scooters
 elétricas: aluguel com comissão automática (valor cobrado − valor base do

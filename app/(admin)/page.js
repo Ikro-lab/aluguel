@@ -145,7 +145,7 @@ function HomeConteudo() {
   return (
     <main className="max-w-3xl mx-auto px-4 py-6 pb-16 space-y-5 w-full">
       <div>
-        <h1 className="text-xl font-bold tracking-tight">🛵 ERP Bikes Elétricas</h1>
+        <h1 className="text-xl font-bold tracking-tight">🛵 Freitas Bikes</h1>
         <p className="text-[13px] text-[#8996b3] mt-1">
           Cadastre seus tipos de aluguel e valores base — o excedente cobrado é a comissão do vendedor
         </p>
