@@ -3,13 +3,13 @@ import RegisterSW from "./RegisterSW";
 import NavBar from "@/components/NavBar";
 
 export const metadata = {
-  title: "Controle de Aluguel de Motos",
-  description: "Controle de aluguel de motos, comissão de vendedores e forma de pagamento",
+  title: "ERP Bikes Elétricas",
+  description: "Aluguel, frota, agendamentos e manutenção de bikes elétricas",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Aluguel Motos",
+    title: "Bikes Elét.",
   },
   icons: {
     icon: "/icons/icon-192.png",

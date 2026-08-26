@@ -11,6 +11,8 @@ import HistoricoTable from '@/components/HistoricoTable';
 export default function Home() {
   const [tipos, setTipos] = useState([]);
   const [alugueis, setAlugueis] = useState([]);
+  const [clientes, setClientes] = useState([]);
+  const [bikes, setBikes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
   const [toast, setToast] = useState('');
@@ -28,16 +30,21 @@ export default function Home() {
     }
     setLoading(true);
     setErro(null);
-    const [tiposRes, alugueisRes] = await Promise.all([
+    const [tiposRes, alugueisRes, clientesRes, bikesRes] = await Promise.all([
       supabase.from('tipos_aluguel').select('*').order('valor_base', { ascending: true }),
       supabase.from('alugueis').select('*').order('created_at', { ascending: false }),
+      supabase.from('clientes').select('*').order('nome', { ascending: true }),
+      supabase.from('bikes').select('*').order('modelo', { ascending: true }),
     ]);
 
-    if (tiposRes.error || alugueisRes.error) {
-      setErro((tiposRes.error || alugueisRes.error).message);
+    const erroRes = tiposRes.error || alugueisRes.error || clientesRes.error || bikesRes.error;
+    if (erroRes) {
+      setErro(erroRes.message);
     } else {
       setTipos(tiposRes.data || []);
       setAlugueis(alugueisRes.data || []);
+      setClientes(clientesRes.data || []);
+      setBikes(bikesRes.data || []);
     }
     setLoading(false);
   }, []);
@@ -50,6 +57,8 @@ export default function Home() {
       .channel('controle-motos-changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'alugueis' }, () => carregarTudo())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tipos_aluguel' }, () => carregarTudo())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'clientes' }, () => carregarTudo())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'bikes' }, () => carregarTudo())
       .subscribe();
 
     return () => {
@@ -62,11 +71,16 @@ export default function Home() {
     return Array.from(set).sort();
   }, [alugueis]);
 
+  const bikesDisponiveis = useMemo(() => bikes.filter((b) => b.status === 'disponivel'), [bikes]);
+
   async function handleAddAluguel(registro) {
     const { error } = await supabase.from('alugueis').insert(registro);
     if (error) {
       showToast('Erro ao salvar: ' + error.message);
       return;
+    }
+    if (registro.bike_id) {
+      await supabase.from('bikes').update({ status: 'alugada' }).eq('id', registro.bike_id);
     }
     showToast('Aluguel registrado');
     carregarTudo();
@@ -119,7 +133,7 @@ export default function Home() {
   return (
     <main className="max-w-3xl mx-auto px-4 py-6 pb-16 space-y-5 w-full">
       <div>
-        <h1 className="text-xl font-bold tracking-tight">🏍️ Controle de Aluguel de Motos</h1>
+        <h1 className="text-xl font-bold tracking-tight">🛵 ERP Bikes Elétricas</h1>
         <p className="text-[13px] text-[#8996b3] mt-1">
           Cadastre seus tipos de aluguel e valores base — o excedente cobrado é a comissão do vendedor
         </p>
@@ -143,7 +157,13 @@ export default function Home() {
         <div className="text-center text-[#8996b3] text-sm py-10">Carregando…</div>
       ) : (
         <>
-          <NovoAluguelForm tipos={tipos} vendedoresConhecidos={vendedoresConhecidos} onSubmit={handleAddAluguel} />
+          <NovoAluguelForm
+            tipos={tipos}
+            vendedoresConhecidos={vendedoresConhecidos}
+            clientes={clientes}
+            bikesDisponiveis={bikesDisponiveis}
+            onSubmit={handleAddAluguel}
+          />
           <TiposManager tipos={tipos} onAdd={handleAddTipo} onUpdate={handleUpdateTipo} onDelete={handleDeleteTipo} />
           <ResumoCards alugueis={alugueis} />
           <VendorRanking alugueis={alugueis} />

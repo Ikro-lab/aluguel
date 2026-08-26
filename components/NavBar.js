@@ -5,6 +5,10 @@ import { usePathname } from 'next/navigation';
 
 const LINKS = [
   { href: '/', label: 'Início' },
+  { href: '/agenda', label: 'Agenda' },
+  { href: '/frota', label: 'Frota' },
+  { href: '/manutencao', label: 'Manutenção' },
+  { href: '/clientes', label: 'Clientes' },
   { href: '/faturamento', label: 'Faturamento' },
   { href: '/despesas', label: 'Despesas' },
   { href: '/funcionarios', label: 'Funcionários' },

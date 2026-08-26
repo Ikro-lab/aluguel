@@ -88,7 +88,7 @@ export default function DespesaForm({ onSubmit }) {
           <input
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
-            placeholder="Ex: Troca de óleo da moto 3"
+            placeholder="Ex: Troca de pneu da bike 3"
             className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
           />
         </div>

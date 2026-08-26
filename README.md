@@ -1,18 +1,23 @@
-# Controle de Aluguel de Motos
+# ERP Bikes Elétricas
 
-App Next.js + Supabase para controlar aluguéis de motos, calcular a comissão do
-vendedor automaticamente (valor cobrado − valor base do tipo de aluguel) e
-acompanhar histórico, forma de pagamento e comissão por vendedor. Funciona como
-PWA (dá para "instalar" no celular, incluindo Android TV/Google TV).
+App Next.js + Supabase para gerenciar um negócio de aluguel de bikes/scooters
+elétricas: aluguel com comissão automática (valor cobrado − valor base do
+tipo), financeiro (faturamento, comissão por vendedor, fechamento de caixa),
+clientes e agenda de retiradas/devoluções/manutenções, frota (status, foto,
+km/bateria) e ordens de serviço. Funciona como PWA (dá para "instalar" no
+celular, incluindo Android TV/Google TV).
 
 ## 1. Criar o banco no Supabase
 
 1. Crie uma conta gratuita em https://supabase.com e um novo projeto.
 2. No painel do projeto, vá em **SQL Editor > New query**, cole o conteúdo do
    arquivo [`supabase/schema.sql`](./supabase/schema.sql) e clique em **Run**.
-   Isso cria as tabelas `tipos_aluguel` e `alugueis`, já com os 3 tipos padrão
-   (Meia hora R$55, 1 hora R$100, Diária R$300).
-3. Vá em **Project Settings > API** e copie:
+   Isso cria todas as tabelas (tipos de aluguel, aluguéis, funcionários, vales,
+   despesas, clientes, bikes, agendamentos, ordens de serviço), já com os 3
+   tipos padrão de aluguel (Meia hora R$55, 1 hora R$100, Diária R$300).
+3. Vá em **Storage** e crie um bucket novo chamado `bikes-fotos`, marcado como
+   **Public bucket** — é onde ficam as fotos da frota.
+4. Vá em **Project Settings > API** e copie:
    - `Project URL` → variável `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public key` → variável `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
@@ -75,24 +80,40 @@ offline dos aluguéis, só leitura instantânea quando há rede).
 ## Estrutura
 
 ```
-app/                 páginas (Next.js App Router)
-components/          formulário, gerenciador de tipos, resumo, ranking, histórico
+app/                 páginas (Next.js App Router): início, agenda, frota,
+                     manutenção, clientes, faturamento, despesas, funcionários
+components/          formulários, tabelas, gráficos e badges de status
 lib/supabaseClient.js  cliente do Supabase
-lib/format.js        formatação de moeda e lista de formas de pagamento
+lib/useRealtimeTable.js  hook de leitura + sincronização em tempo real
+lib/format.js        formatação, constantes de status e helpers de data/período
 supabase/schema.sql  script de criação das tabelas + dados padrão
 public/manifest.json, sw.js, icons/  configuração do PWA
 ```
 
 ## Funcionalidades
 
-- Cadastro de aluguel: vendedor, tipo, valor cobrado, forma de pagamento.
-- Comissão calculada automaticamente (valor cobrado − valor base do tipo).
-- Gerenciamento de tipos de aluguel: adicionar, editar nome/valor base, excluir
-  (o nome do tipo fica gravado em cada aluguel, então editar ou excluir um tipo
-  não altera o histórico já registrado).
-- Resumo geral (faturado, comissões, quantidade) e ranking de comissão por
-  vendedor.
-- Histórico completo com filtro por vendedor e exclusão de registros.
+**Aluguel e financeiro**
+- Cadastro de aluguel: vendedor, tipo, valor cobrado, forma de pagamento,
+  cliente e bike (opcionais). Comissão calculada automaticamente (valor
+  cobrado − valor base do tipo).
+- Gerenciamento de tipos de aluguel, despesas por categoria e vale/adiantamento
+  por funcionário (abate do saldo de comissão, bloqueado se exceder o saldo).
+- Faturamento com filtro por período, gráficos mensais de faturamento e
+  comissão (por funcionário ou time todo) e fechamento de caixa diário por
+  forma de pagamento.
+
+**Clientes e agenda**
+- Cadastro de clientes com histórico de aluguéis e agendamentos.
+- Agenda de retirada/devolução/entrega/manutenção em lista (com indicador de
+  "hoje"/"atrasado") ou calendário semanal.
+
+**Frota e manutenção**
+- Cadastro de bikes com foto (upload para o Supabase Storage), status,
+  km/bateria — o status muda automaticamente ao alugar ou abrir/concluir uma
+  ordem de serviço.
+- Ordens de serviço por bike (problema, peças, custo, mecânico) com alerta
+  visual de revisão recomendada.
+
 - Sincronização em tempo real: se você tiver o app aberto em dois aparelhos
-  (ex. celular do dono + celular de um vendedor), um aluguel registrado em um
-  aparece automaticamente no outro.
+  (ex. celular do dono + celular de um funcionário), uma mudança em um aparece
+  automaticamente no outro.

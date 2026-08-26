@@ -3,11 +3,13 @@
 import { useMemo, useState } from 'react';
 import { fmtMoney, FORMAS_PAGAMENTO } from '@/lib/format';
 
-export default function NovoAluguelForm({ tipos, vendedoresConhecidos, onSubmit }) {
+export default function NovoAluguelForm({ tipos, vendedoresConhecidos, clientes = [], bikesDisponiveis = [], onSubmit }) {
   const [vendedor, setVendedor] = useState('');
   const [tipoId, setTipoId] = useState(tipos[0]?.id || '');
   const [valorCobrado, setValorCobrado] = useState('');
   const [formaPagamento, setFormaPagamento] = useState(FORMAS_PAGAMENTO[0]);
+  const [clienteId, setClienteId] = useState('');
+  const [bikeId, setBikeId] = useState('');
   const [saving, setSaving] = useState(false);
 
   const tipoSelecionado = useMemo(
@@ -33,9 +35,13 @@ export default function NovoAluguelForm({ tipos, vendedoresConhecidos, onSubmit 
       valor_cobrado: cobrado,
       comissao,
       forma_pagamento: formaPagamento,
+      cliente_id: clienteId || null,
+      bike_id: bikeId || null,
     });
     setSaving(false);
     setValorCobrado('');
+    setClienteId('');
+    setBikeId('');
   }
 
   return (
@@ -101,6 +107,35 @@ export default function NovoAluguelForm({ tipos, vendedoresConhecidos, onSubmit 
           >
             {FORMAS_PAGAMENTO.map((f) => (
               <option key={f} value={f}>{f}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Cliente (opcional)</label>
+          <select
+            value={clienteId}
+            onChange={(e) => setClienteId(e.target.value)}
+            className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
+          >
+            <option value="">— avulso —</option>
+            {clientes.map((c) => (
+              <option key={c.id} value={c.id}>{c.nome}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs text-[#8996b3] mb-1.5 font-medium">Bike (opcional)</label>
+          <select
+            value={bikeId}
+            onChange={(e) => setBikeId(e.target.value)}
+            className="w-full bg-[#16213a] border border-[#22304d] rounded-lg px-3 py-2.5 text-[15px]"
+          >
+            <option value="">— não especificar —</option>
+            {bikesDisponiveis.map((b) => (
+              <option key={b.id} value={b.id}>{b.modelo}{b.patrimonio ? ` — ${b.patrimonio}` : ''}</option>
             ))}
           </select>
         </div>

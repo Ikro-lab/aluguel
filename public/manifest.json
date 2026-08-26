@@ -1,7 +1,7 @@
 {
-  "name": "Controle de Aluguel de Motos",
-  "short_name": "Aluguel Motos",
-  "description": "Controle de aluguel de motos, comissão de vendedores e histórico de pagamentos",
+  "name": "ERP Bikes Elétricas",
+  "short_name": "Bikes Elét.",
+  "description": "Aluguel, frota, agendamentos e manutenção de bikes elétricas",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#070d1a",
