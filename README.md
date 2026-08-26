@@ -27,18 +27,31 @@ celular, incluindo Android TV/Google TV).
    uso próprio. Se um dia expuser publicamente, adicione autenticação e troque
    as policies.
 
-## 2. Rodar localmente
+## 2. Configurar o e-mail de notificação (Resend)
+
+A página pública de agendamento (`/agendar`) avisa o lojista por e-mail a cada
+novo pedido. Isso é opcional — sem configurar, o agendamento é salvo
+normalmente, só o e-mail não é enviado.
+
+1. Crie uma conta gratuita em https://resend.com e gere uma API key.
+2. Guarde a API key na variável `RESEND_API_KEY`.
+3. Defina `LOJISTA_EMAIL` com o e-mail que deve receber os avisos.
+
+Essas duas variáveis são só do lado servidor — nunca leve o prefixo
+`NEXT_PUBLIC_` nelas.
+
+## 3. Rodar localmente
 
 ```bash
 npm install
 cp .env.local.example .env.local
-# edite .env.local com as duas chaves do passo anterior
+# edite .env.local com as chaves do Supabase (e do Resend, se for usar)
 npm run dev
 ```
 
 Abra http://localhost:3000
 
-## 3. Publicar na Vercel
+## 4. Publicar na Vercel
 
 **Opção A — pelo site (mais simples):**
 
@@ -46,8 +59,9 @@ Abra http://localhost:3000
    `git init`, `git add .`, `git commit -m "inicial"`, `git remote add origin ...`,
    `git push`).
 2. Em https://vercel.com, clique em **Add New > Project** e importe o repositório.
-3. Em **Environment Variables**, adicione `NEXT_PUBLIC_SUPABASE_URL` e
-   `NEXT_PUBLIC_SUPABASE_ANON_KEY` com os mesmos valores do `.env.local`.
+3. Em **Environment Variables**, adicione `NEXT_PUBLIC_SUPABASE_URL`,
+   `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `RESEND_API_KEY` e `LOJISTA_EMAIL` com os
+   mesmos valores do `.env.local`.
 4. Clique em **Deploy**.
 
 **Opção B — pela CLI:**
@@ -60,7 +74,7 @@ vercel
 vercel --prod
 ```
 
-## 4. Instalar como PWA
+## 5. Instalar como PWA
 
 Depois de publicado (PWA exige HTTPS, que a Vercel já fornece por padrão):
 
@@ -76,6 +90,16 @@ O app já vem com `manifest.json`, ícones e um service worker (`public/sw.js`)
 que cacheia o "shell" do app para abrir mais rápido e funcionar minimamente
 offline — os dados em si sempre vêm do Supabase ao vivo (não há sincronização
 offline dos aluguéis, só leitura instantânea quando há rede).
+
+## Agendamento público (link + QR code)
+
+Além da agenda interna, existe uma página pública em `/agendar` — sem login —
+para o cliente final pedir um horário sozinho (retirada na loja ou entrega,
+sem ver nenhum valor em R$). Ela cai como **"Aguardando confirmação"** na
+Agenda interna, com botões de Confirmar/Recusar.
+
+Pra divulgar: abra **Agenda** dentro do app, clique em **"gerar QR code"** —
+dá pra copiar o link ou baixar o QR code em PNG pra imprimir.
 
 ## Estrutura
 
@@ -113,6 +137,10 @@ public/manifest.json, sw.js, icons/  configuração do PWA
   ordem de serviço.
 - Ordens de serviço por bike (problema, peças, custo, mecânico) com alerta
   visual de revisão recomendada.
+
+**Agendamento público**
+- Página `/agendar` sem login, com QR code pra divulgar, e-mail automático
+  pro lojista (via Resend) e código de referência pro cliente.
 
 - Sincronização em tempo real: se você tiver o app aberto em dois aparelhos
   (ex. celular do dono + celular de um funcionário), uma mudança em um aparece

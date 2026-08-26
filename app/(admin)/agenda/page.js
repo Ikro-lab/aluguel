@@ -6,6 +6,7 @@ import { useRealtimeTable } from '@/lib/useRealtimeTable';
 import AgendamentoForm from '@/components/AgendamentoForm';
 import AgendaLista from '@/components/AgendaLista';
 import AgendaCalendarioSemana from '@/components/AgendaCalendarioSemana';
+import QRCodeAgendamento from '@/components/QRCodeAgendamento';
 
 export default function AgendaPage() {
   const { data: agendamentos, loading: loadingAgendamentos, erro: erroAgendamentos, reload } = useRealtimeTable('agendamentos');
@@ -84,6 +85,7 @@ export default function AgendaPage() {
         <div className="text-center text-[#8996b3] text-sm py-10">Carregando…</div>
       ) : (
         <>
+          <QRCodeAgendamento />
           <AgendamentoForm clientes={clientes} bikes={bikes} onSubmit={handleAdd} />
           {visao === 'lista' ? (
             <AgendaLista agendamentos={agendamentos} clientes={clientes} bikes={bikes} onUpdateStatus={handleUpdateStatus} onDelete={handleDelete} />

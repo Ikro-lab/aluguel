@@ -1,6 +1,5 @@
 import "./globals.css";
 import RegisterSW from "./RegisterSW";
-import NavBar from "@/components/NavBar";
 
 export const metadata = {
   title: "ERP Bikes Elétricas",
@@ -28,7 +27,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-[#070d1a] text-[#e7ecf7]">
-        <NavBar />
         {children}
         <RegisterSW />
       </body>

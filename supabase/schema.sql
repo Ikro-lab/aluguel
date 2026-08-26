@@ -104,6 +104,13 @@ create table if not exists ordens_servico (
 alter table alugueis add column if not exists cliente_id uuid references clientes(id) on delete set null;
 alter table alugueis add column if not exists bike_id uuid references bikes(id) on delete set null;
 
+-- Agendamento público (link + QR code): status também usa
+-- 'aguardando_confirmacao' e 'recusado' além dos valores internos.
+alter table agendamentos add column if not exists codigo_agendamento text;
+alter table agendamentos add column if not exists tempo_uso text;
+alter table agendamentos add column if not exists endereco jsonb;
+create unique index if not exists idx_agendamentos_codigo on agendamentos(codigo_agendamento);
+
 create index if not exists idx_agendamentos_data on agendamentos(data_hora);
 create index if not exists idx_agendamentos_bike on agendamentos(bike_id);
 create index if not exists idx_ordens_servico_bike on ordens_servico(bike_id);
