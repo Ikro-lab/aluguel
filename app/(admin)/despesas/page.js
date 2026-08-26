@@ -3,11 +3,20 @@
 import { useCallback, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { useRealtimeTable } from '@/lib/useRealtimeTable';
+import RouteGuard from '@/components/RouteGuard';
 import DespesaForm from '@/components/DespesaForm';
 import DespesasResumo from '@/components/DespesasResumo';
 import DespesasTable from '@/components/DespesasTable';
 
 export default function DespesasPage() {
+  return (
+    <RouteGuard papeis={['administrador']}>
+      <DespesasConteudo />
+    </RouteGuard>
+  );
+}
+
+function DespesasConteudo() {
   const { data: despesas, loading, erro, reload } = useRealtimeTable('despesas', { orderBy: 'data', ascending: false });
   const [toast, setToast] = useState('');
 

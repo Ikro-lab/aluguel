@@ -127,10 +127,30 @@ create index if not exists idx_agendamentos_bike on agendamentos(bike_id);
 create index if not exists idx_ordens_servico_bike on ordens_servico(bike_id);
 create index if not exists idx_ordens_servico_status on ordens_servico(status);
 
+-- Login e papéis (administrador/vendedor/mecânico)
+create table if not exists perfis (
+  id uuid primary key references auth.users(id) on delete cascade,
+  papel text not null default 'vendedor',
+  funcionario_id uuid references funcionarios(id) on delete set null,
+  nome text not null,
+  created_at timestamptz not null default now()
+);
+
+create or replace function meu_papel() returns text
+language sql security definer stable as $$
+  select papel from perfis where id = auth.uid();
+$$;
+
+create or replace function meu_nome_funcionario() returns text
+language sql security definer stable as $$
+  select f.nome from perfis p join funcionarios f on f.id = p.funcionario_id
+  where p.id = auth.uid();
+$$;
+
 -- Row Level Security
--- Este é um app interno/single-tenant controlado pela chave anon.
--- Liberamos leitura/escrita geral aqui; se depois você adicionar login,
--- troque estas policies para restringir por usuário autenticado.
+-- Login obrigatório para tudo, com permissões por papel:
+-- administrador vê tudo; vendedor só a própria comissão em alugueis; e
+-- vales/despesas (dados financeiros sensíveis) só administrador.
 alter table tipos_aluguel enable row level security;
 alter table alugueis enable row level security;
 alter table funcionarios enable row level security;
@@ -140,39 +160,62 @@ alter table clientes enable row level security;
 alter table bikes enable row level security;
 alter table agendamentos enable row level security;
 alter table ordens_servico enable row level security;
+alter table perfis enable row level security;
 
 drop policy if exists "tipos_aluguel_all" on tipos_aluguel;
-create policy "tipos_aluguel_all" on tipos_aluguel for all using (true) with check (true);
+create policy "tipos_aluguel_all" on tipos_aluguel for all
+  using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 
 drop policy if exists "alugueis_all" on alugueis;
-create policy "alugueis_all" on alugueis for all using (true) with check (true);
+drop policy if exists "alugueis_select" on alugueis;
+drop policy if exists "alugueis_write" on alugueis;
+create policy "alugueis_select" on alugueis for select
+  using (meu_papel() = 'administrador' or vendedor = meu_nome_funcionario());
+create policy "alugueis_write" on alugueis for insert
+  with check (auth.role() = 'authenticated');
+create policy "alugueis_update" on alugueis for update
+  using (meu_papel() = 'administrador' or vendedor = meu_nome_funcionario());
+create policy "alugueis_delete" on alugueis for delete
+  using (meu_papel() = 'administrador' or vendedor = meu_nome_funcionario());
 
 drop policy if exists "funcionarios_all" on funcionarios;
-create policy "funcionarios_all" on funcionarios for all using (true) with check (true);
+create policy "funcionarios_select" on funcionarios for select
+  using (auth.role() = 'authenticated');
+create policy "funcionarios_write" on funcionarios for all
+  using (meu_papel() = 'administrador') with check (meu_papel() = 'administrador');
 
 drop policy if exists "vales_all" on vales;
-create policy "vales_all" on vales for all using (true) with check (true);
+create policy "vales_admin" on vales for all
+  using (meu_papel() = 'administrador') with check (meu_papel() = 'administrador');
 
 drop policy if exists "despesas_all" on despesas;
-create policy "despesas_all" on despesas for all using (true) with check (true);
+create policy "despesas_admin" on despesas for all
+  using (meu_papel() = 'administrador') with check (meu_papel() = 'administrador');
 
 drop policy if exists "clientes_all" on clientes;
-create policy "clientes_all" on clientes for all using (true) with check (true);
+create policy "clientes_all" on clientes for all
+  using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 
 drop policy if exists "bikes_all" on bikes;
-create policy "bikes_all" on bikes for all using (true) with check (true);
+create policy "bikes_all" on bikes for all
+  using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 
 drop policy if exists "agendamentos_all" on agendamentos;
-create policy "agendamentos_all" on agendamentos for all using (true) with check (true);
+create policy "agendamentos_all" on agendamentos for all
+  using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 
 drop policy if exists "ordens_servico_all" on ordens_servico;
-create policy "ordens_servico_all" on ordens_servico for all using (true) with check (true);
+create policy "ordens_servico_all" on ordens_servico for all
+  using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 
--- Storage: crie manualmente um bucket público chamado "bikes-fotos"
--- (Project > Storage > New bucket > Public bucket: ON) para as fotos da frota.
--- "Public bucket" só libera LEITURA. Upload (INSERT) sempre precisa de uma
--- policy própria em storage.objects, mesmo em bucket público — por isso:
+drop policy if exists "perfis_select" on perfis;
+create policy "perfis_select" on perfis for select
+  using (id = auth.uid() or meu_papel() = 'administrador');
+
+-- Storage: bucket público "bikes-fotos" (Project > Storage > New bucket >
+-- Public bucket: ON). "Public bucket" só libera LEITURA — upload sempre
+-- precisa de policy própria, agora restrita a quem está logado.
 drop policy if exists "bikes_fotos_all" on storage.objects;
 create policy "bikes_fotos_all" on storage.objects for all
-  using (bucket_id = 'bikes-fotos')
-  with check (bucket_id = 'bikes-fotos');
+  using (bucket_id = 'bikes-fotos' and auth.role() = 'authenticated')
+  with check (bucket_id = 'bikes-fotos' and auth.role() = 'authenticated');

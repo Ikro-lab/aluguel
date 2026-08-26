@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient';
+import { useAuth } from '@/lib/AuthProvider';
+import RouteGuard from '@/components/RouteGuard';
 import NovoAluguelForm from '@/components/NovoAluguelForm';
 import TiposManager from '@/components/TiposManager';
 import ResumoCards from '@/components/ResumoCards';
@@ -9,6 +11,16 @@ import VendorRanking from '@/components/VendorRanking';
 import HistoricoTable from '@/components/HistoricoTable';
 
 export default function Home() {
+  return (
+    <RouteGuard papeis={['administrador', 'vendedor']}>
+      <HomeConteudo />
+    </RouteGuard>
+  );
+}
+
+function HomeConteudo() {
+  const { perfil } = useAuth();
+  const isAdmin = perfil?.papel === 'administrador';
   const [tipos, setTipos] = useState([]);
   const [alugueis, setAlugueis] = useState([]);
   const [clientes, setClientes] = useState([]);
@@ -164,9 +176,11 @@ export default function Home() {
             bikesDisponiveis={bikesDisponiveis}
             onSubmit={handleAddAluguel}
           />
-          <TiposManager tipos={tipos} onAdd={handleAddTipo} onUpdate={handleUpdateTipo} onDelete={handleDeleteTipo} />
+          {isAdmin && (
+            <TiposManager tipos={tipos} onAdd={handleAddTipo} onUpdate={handleUpdateTipo} onDelete={handleDeleteTipo} />
+          )}
           <ResumoCards alugueis={alugueis} />
-          <VendorRanking alugueis={alugueis} />
+          {isAdmin && <VendorRanking alugueis={alugueis} />}
           <HistoricoTable alugueis={alugueis} vendedoresConhecidos={vendedoresConhecidos} onDelete={handleDeleteAluguel} />
         </>
       )}

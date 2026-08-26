@@ -3,11 +3,20 @@
 import { useMemo, useState } from 'react';
 import { useRealtimeTable } from '@/lib/useRealtimeTable';
 import { fmtMoney, PERIODOS, filtrarPorPeriodo } from '@/lib/format';
+import RouteGuard from '@/components/RouteGuard';
 import RevenueChart from '@/components/RevenueChart';
 import CommissionChart from '@/components/CommissionChart';
 import FechamentoCaixa from '@/components/FechamentoCaixa';
 
 export default function FaturamentoPage() {
+  return (
+    <RouteGuard papeis={['administrador']}>
+      <FaturamentoConteudo />
+    </RouteGuard>
+  );
+}
+
+function FaturamentoConteudo() {
   const { data: alugueisTodos, loading: loadingAlugueis, erro: erroAlugueis } = useRealtimeTable('alugueis');
   const { data: funcionarios, loading: loadingFuncionarios, erro: erroFuncionarios } = useRealtimeTable('funcionarios', {
     orderBy: 'nome',

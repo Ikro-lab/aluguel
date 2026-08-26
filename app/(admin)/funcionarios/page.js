@@ -3,11 +3,20 @@
 import { useCallback, useMemo, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { useRealtimeTable } from '@/lib/useRealtimeTable';
+import RouteGuard from '@/components/RouteGuard';
 import FuncionariosManager from '@/components/FuncionariosManager';
 import ValeForm from '@/components/ValeForm';
 import ValesTable from '@/components/ValesTable';
 
 export default function FuncionariosPage() {
+  return (
+    <RouteGuard papeis={['administrador']}>
+      <FuncionariosConteudo />
+    </RouteGuard>
+  );
+}
+
+function FuncionariosConteudo() {
   const { data: funcionarios, loading: loadingFuncionarios, erro: erroFuncionarios, reload: reloadFuncionarios } = useRealtimeTable('funcionarios', {
     orderBy: 'nome',
     ascending: true,

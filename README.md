@@ -21,13 +21,33 @@ celular, incluindo Android TV/Google TV).
    - `Project URL` → variável `NEXT_PUBLIC_SUPABASE_URL`
    - `anon public key` → variável `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-   Essas são chaves públicas de cliente (não são segredos como uma senha), mas
-   o acesso de escrita é controlado pelas *policies* de RLS definidas no script
-   SQL — por padrão liberado para leitura/escrita, já que é um app interno de
-   uso próprio. Se um dia expuser publicamente, adicione autenticação e troque
-   as policies.
+   Essas são chaves públicas de cliente (não são segredos como uma senha) —
+   o acesso é controlado pelas *policies* de RLS do script SQL, que agora
+   exigem login (ver seção seguinte).
+5. Em **Project Settings > API**, copie também a **`service_role` key**
+   (bem diferente da anon: essa é secreta, nunca vai pro navegador) na
+   variável `SUPABASE_SERVICE_ROLE_KEY`. É usada só pela tela de Usuários
+   (criar/redefinir senha de funcionário) e pela página pública `/agendar`.
 
-## 2. Configurar o e-mail de notificação (Resend)
+## 2. Login: criar o primeiro administrador
+
+O app exige login para tudo (menos a página pública `/agendar`), com 3
+papéis: **administrador** (dono, vê tudo), **vendedor** (registra aluguéis,
+só vê a própria comissão) e **mecânico** (frota/manutenção, sem financeiro).
+
+O primeiro administrador precisa ser criado manualmente — os próximos
+(funcionários) já saem pela tela **Usuários** dentro do app:
+
+1. No painel do Supabase, vá em **Authentication > Users > Add user**, crie
+   com seu e-mail e uma senha.
+2. Copie o `UID` desse usuário criado.
+3. No **SQL Editor**, rode (trocando os valores):
+   ```sql
+   insert into perfis (id, papel, nome) values ('COLE-O-UID-AQUI', 'administrador', 'Seu Nome');
+   ```
+4. Pronto — entre em `/login` do app com esse e-mail/senha.
+
+## 3. Configurar o e-mail de notificação (Resend)
 
 A página pública de agendamento (`/agendar`) avisa o lojista por e-mail a cada
 novo pedido. Isso é opcional — sem configurar, o agendamento é salvo
@@ -40,7 +60,7 @@ normalmente, só o e-mail não é enviado.
 Essas duas variáveis são só do lado servidor — nunca leve o prefixo
 `NEXT_PUBLIC_` nelas.
 
-## 3. Rodar localmente
+## 4. Rodar localmente
 
 ```bash
 npm install
@@ -51,7 +71,7 @@ npm run dev
 
 Abra http://localhost:3000
 
-## 4. Publicar na Vercel
+## 5. Publicar na Vercel
 
 **Opção A — pelo site (mais simples):**
 
@@ -60,8 +80,8 @@ Abra http://localhost:3000
    `git push`).
 2. Em https://vercel.com, clique em **Add New > Project** e importe o repositório.
 3. Em **Environment Variables**, adicione `NEXT_PUBLIC_SUPABASE_URL`,
-   `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `RESEND_API_KEY` e `LOJISTA_EMAIL` com os
-   mesmos valores do `.env.local`.
+   `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `RESEND_API_KEY`, `LOJISTA_EMAIL` e
+   `SUPABASE_SERVICE_ROLE_KEY` com os mesmos valores do `.env.local`.
 4. Clique em **Deploy**.
 
 **Opção B — pela CLI:**
@@ -74,7 +94,7 @@ vercel
 vercel --prod
 ```
 
-## 5. Instalar como PWA
+## 6. Instalar como PWA
 
 Depois de publicado (PWA exige HTTPS, que a Vercel já fornece por padrão):
 
@@ -107,7 +127,9 @@ dá pra copiar o link ou baixar o QR code em PNG pra imprimir.
 app/                 páginas (Next.js App Router): início, agenda, frota,
                      manutenção, clientes, faturamento, despesas, funcionários
 components/          formulários, tabelas, gráficos e badges de status
-lib/supabaseClient.js  cliente do Supabase
+lib/supabaseClient.js  cliente do Supabase (navegador, chave anon)
+lib/supabaseAdmin.js  cliente privilegiado (service role, só em app/api/**)
+lib/AuthProvider.js  contexto de sessão/papel do usuário logado
 lib/useRealtimeTable.js  hook de leitura + sincronização em tempo real
 lib/format.js        formatação, constantes de status e helpers de data/período
 supabase/schema.sql  script de criação das tabelas + dados padrão
@@ -115,6 +137,14 @@ public/manifest.json, sw.js, icons/  configuração do PWA
 ```
 
 ## Funcionalidades
+
+**Login e papéis**
+- Login obrigatório (e-mail/senha) pra tudo, exceto `/agendar`. Papéis:
+  administrador (tudo), vendedor (aluguéis + só a própria comissão) e
+  mecânico (frota/manutenção, sem financeiro) — reforçado por RLS no
+  Postgres, não só escondido na tela.
+- Tela **Usuários** (só administrador): cria login de funcionário com e-mail
+  e senha temporária, e redefine senha quando precisar.
 
 **Aluguel e financeiro**
 - Cadastro de aluguel: vendedor, tipo, valor cobrado, forma de pagamento,
