@@ -7,7 +7,10 @@ import OrdemServicoForm from '@/components/OrdemServicoForm';
 import OrdensServicoList from '@/components/OrdensServicoList';
 
 export default function ManutencaoPage() {
-  const { data: ordensServico, loading: loadingOS, erro: erroOS, reload } = useRealtimeTable('ordens_servico');
+  const { data: ordensServico, loading: loadingOS, erro: erroOS, reload } = useRealtimeTable('ordens_servico', {
+    orderBy: 'aberta_em',
+    ascending: false,
+  });
   const { data: bikes, loading: loadingBikes, erro: erroBikes } = useRealtimeTable('bikes', { orderBy: 'modelo', ascending: true });
   const { data: funcionarios, loading: loadingFuncionarios, erro: erroFuncionarios } = useRealtimeTable('funcionarios', {
     orderBy: 'nome',

@@ -11,7 +11,10 @@ export default function FrotaPage() {
     orderBy: 'modelo',
     ascending: true,
   });
-  const { data: ordensServico, loading: loadingOS, erro: erroOS } = useRealtimeTable('ordens_servico');
+  const { data: ordensServico, loading: loadingOS, erro: erroOS } = useRealtimeTable('ordens_servico', {
+    orderBy: 'aberta_em',
+    ascending: false,
+  });
   const [toast, setToast] = useState('');
 
   const loading = loadingBikes || loadingOS;
