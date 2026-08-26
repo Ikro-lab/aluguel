@@ -1,5 +1,5 @@
-const CACHE_NAME = 'controle-motos-v1';
-const APP_SHELL = ['/', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png'];
+const CACHE_NAME = 'controle-motos-v2';
+const APP_SHELL = ['/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -17,13 +17,19 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Network-first para chamadas à API/Supabase (nunca servir dados velhos do cache),
-// cache-first para o shell estático do app (funciona ao abrir offline).
+// Network-first para navegação (HTML) e chamadas à API/Supabase, para nunca travar
+// o usuário numa versão antiga do app ou com dados velhos.
+// Cache-first só para assets estáticos com hash (JS/CSS), que funcionam offline.
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
   if (event.request.method !== 'GET') return;
   if (url.origin.includes('supabase.co')) return; // deixa passar direto para a rede
+
+  if (event.request.mode === 'navigate') {
+    event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then((cached) => {
