@@ -9,10 +9,11 @@ export default function RouteGuard({ papeis, children }) {
   const router = useRouter();
 
   const negado = !loading && perfil && papeis && !papeis.includes(perfil.papel);
+  const destinoSeguro = perfil?.papel === 'mecanico' ? '/manutencao' : '/';
 
   useEffect(() => {
-    if (negado) router.replace('/');
-  }, [negado, router]);
+    if (negado) router.replace(destinoSeguro);
+  }, [negado, destinoSeguro, router]);
 
   if (loading) {
     return <div className="text-center text-[#8996b3] text-sm py-10">Carregando…</div>;

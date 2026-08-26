@@ -15,13 +15,16 @@ export default function LoginForm() {
     e.preventDefault();
     setErro('');
     setSaving(true);
-    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: senha });
-    setSaving(false);
+    const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: senha });
     if (error) {
+      setSaving(false);
       setErro('E-mail ou senha incorretos');
       return;
     }
-    router.push('/');
+
+    const { data: perfil } = await supabase.from('perfis').select('papel').eq('id', data.user.id).maybeSingle();
+    setSaving(false);
+    router.push(perfil?.papel === 'mecanico' ? '/manutencao' : '/');
   }
 
   return (
