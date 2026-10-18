@@ -47,6 +47,14 @@ O primeiro administrador precisa ser criado manualmente — os próximos
    ```
 4. Pronto — entre em `/login` do app com esse e-mail/senha.
 
+**Esqueci minha senha:** a tela de login tem o link "Esqueci minha senha",
+que manda um e-mail do Supabase com um link para `/redefinir-senha`. Para o
+link funcionar, em **Authentication > URL Configuration** do Supabase:
+
+- **Site URL**: o endereço do app (ex: `https://seu-app.vercel.app`).
+- **Redirect URLs**: adicione `https://seu-app.vercel.app/redefinir-senha`
+  (e `http://localhost:3000/redefinir-senha` se for testar localmente).
+
 ## 3. Configurar o e-mail de notificação (Resend)
 
 A página pública de agendamento (`/agendar`) avisa o lojista por e-mail a cada
